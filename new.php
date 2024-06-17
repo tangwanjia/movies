@@ -1,3 +1,21 @@
+<?php
+  require "data.php";
+  require "functions.php";
+
+  $movie = [];
+
+  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $movie = sanitize($_POST);
+    $errors = validate($movie);
+
+    if (count($errors) === 0) {
+      $movie_id = addMovie($movie);
+
+      header("Location: movie.php?id=" . $movie_id);
+    }
+    
+  }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,13 +30,7 @@
     <?php require "header.php"; ?>
     <h2 class="form-title">New Movie</h2>
     <form class="form" method="post">
-      <input type="text" class="form-control" name="movie_title" placeholder="Movie Title" required>
-      <input type="text" class="form-control" name="director" placeholder="Director" required>
-      <input type="number" class="form-control" name="year" placeholder="Year" required>
-      <select class="form-select" name="genre_id">
-        <option value="">Select a Genre</option>
-        <option value="Fantasy">Fantasy</option>
-      </select>
+      <?php require "inputs.php"; ?>
       <button type="submit" class="button">Add Movie</button>
     </form>
   </main>

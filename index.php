@@ -1,3 +1,13 @@
+<?php
+  require "data.php";
+  require "functions.php";
+
+  if (isset($_GET['search'])) {
+    $movies = searchMovies($_GET['search']);
+  } else {
+    $movies = getMovies();
+  }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,7 +24,9 @@
       <input type="search" class="form-control" name="search" placeholder="Search">
     </form>
     <section class="movies">
-      <a class="movie" href="movie.php">Labyrinth</a>
+      <?php foreach ($movies as $movie) : ?>
+      <a class="movie" href="movie.php?id=<?php echo $movie['movie_id']; ?>"><?php echo $movie['movie_title']; ?></a>
+      <?php endforeach; ?>
     </section>
   </main>
 </body>

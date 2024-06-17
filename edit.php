@@ -1,3 +1,27 @@
+<?php
+  require "data.php";
+  require "functions.php";
+
+  if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $movie = sanitize($_POST);
+    $errors = validate($movie);
+    
+    if (count($errors) === 0) {
+      $movie_id = updateMovie($movie);
+      
+      header("Location: movie.php?id=" . $movie_id);
+    }
+  } else if (isset($_GET['id'])) {
+    $movie = getMovie($_GET['id']);
+    
+    if (!$movie) {
+      // go back to index.php
+      header("Location: index.php");
+    }
+  } else {
+    header("Location: index.php");
+  }
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,15 +36,14 @@
     <?php require "header.php"; ?>
     <h2 class="form-title">Edit Movie</h2>
     <form class="form" method="post">
-      <input type="text" class="form-control" name="movie_title" placeholder="Movie Title" required value="Labyrinth">
-      <input type="text" class="form-control" name="director" placeholder="Director" required
-          value="Jim Henson">
-      <input type="number" class="form-control" name="year" placeholder="Year" required
-          value="1986">
-      <select class="form-control" name="genre_id">
-          <option value="1">Fantasy</option>
-      </select>
+      <input type="hidden" name="movie_id" value="<?php echo $movie['movie_id']; ?>">
+      <?php require "inputs.php"; ?>
       <button type="submit" class="button">Update Movie</button>
+    </form>
+
+    <form class="form" action="delete.php" method="post">
+      <input type="hidden" name="movie_id" value="<?php echo $movie['movie_id']; ?>">
+      <button type="submit" class="button danger">Delete Movie</button>
     </form>
   </main>
 </body>
